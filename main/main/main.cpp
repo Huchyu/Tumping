@@ -5,9 +5,11 @@
 
 
 SCENEID SceneState = SCENEID_LOGO;
-//char* Logo[6];
-//Vector3 vPosition;
-char* Menu[3];
+char* Backgra[8];
+int iBack = 0;
+int iBackCheck = 0;
+int iPosition = 110;
+int iButton = 0;
 
 Logo* pLogo = NULL;
 
@@ -25,6 +27,7 @@ void SceneLogo();
 
 void SceneMenu();
 
+void SceneStage();
 
 
 int main(void)
@@ -42,16 +45,21 @@ int main(void)
 	pLogo->Position.x = 0;
 	pLogo->Position.y = 5;
 
-	Menu[0] = (char*)"시작하기";
-	Menu[1] = (char*)"점수보기";
-	Menu[2] = (char*)"돌아가기";
+	Backgra[0] = (char*)"▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒";
+	Backgra[1] = (char*)"╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊";
+	Backgra[2] = (char*)"─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─";
+	Backgra[3] = (char*)"╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊";
+	Backgra[4] = (char*)"▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒";
+	Backgra[5] = (char*)"─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─";
+	Backgra[6] = (char*)"╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊";
+	Backgra[7] = (char*)"─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─╊─";
 
 
 	DWORD dwTime = GetTickCount();
 
 	while (true)
 	{
-		if (dwTime + 250 < GetTickCount())
+		if (dwTime + 80 < GetTickCount())
 		{
 			dwTime = GetTickCount();
 			system("cls");
@@ -87,11 +95,29 @@ void SceneManager()
 		SceneMenu();
 
 		if (dwKey & KEY_ENTER)
-			SceneState = SCENEID_STAGE;
+		{
+			if (iButton == 0)
+			{
+				SceneState = SCENEID_STAGE;
+			}
+			else if (iButton == 1)
+			{
+				SceneState = SCENEID_RANK;
+			}
+			else
+			{
+				SceneState = SCENEID_LOGO;
+			}
+		}
 
 		break;
+	case SCENEID_RANK:
+		printf_s("점수게시판 아무튼 만들어야지 그치");
+		break;
 	case SCENEID_STAGE:
-		
+
+		SceneStage();
+
 		break;
 	}
 }
@@ -203,30 +229,67 @@ void SceneLogo()
 void SceneMenu()
 {
 	DWORD dwKey = InputManager();
-	int iButton = 0;
+
+	if (dwKey & KEY_UP)
+	{
+		if (iButton != 0)
+			iButton -= 1;
+	}
+
+	if (dwKey & KEY_DOWN)
+	{
+		if (iButton != 2)
+			iButton += 1;
+	}
 
 	if (iButton == 0)
-		SetCursorPositionString(55, 10, Menu[0], 15);
+		SetCursorPositionString(53, 10, (char*)"▶ 시작하기", 15);
 	else
-		SetCursorPositionString(55, 10, Menu[0], 8);
+		SetCursorPositionString(55, 10, (char*)"시작하기", 8);
 
 	if (iButton == 1)
-		SetCursorPositionString(55, 12, Menu[1], 15);
+		SetCursorPositionString(53, 12, (char*)"▶ 점수보기", 15);
 	else
-		SetCursorPositionString(55, 12, Menu[1], 8);
+		SetCursorPositionString(55, 12, (char*)"점수보기", 8);
 
 	if (iButton == 2)
-		SetCursorPositionString(55, 14, Menu[2], 15);
+		SetCursorPositionString(53, 14, (char*)"▶ 돌아가기", 15);
 	else
-		SetCursorPositionString(55, 14, Menu[2], 8);
+		SetCursorPositionString(55, 14, (char*)"돌아가기", 8);
+}
 
-	if (dwKey & KEY_UP & iButton != 0)
+void SceneStage()
+{
+	//** 바닥 시작
+	switch (iBack)
 	{
-		iButton -= 1;
+	case 0:
+		for (int i = 0; i < 4; ++i)
+		{
+			SetCursorPositionString(0, 23 + i, Backgra[i], 14);
+		}
+		break;
+	case 1:
+		for (int i = 4; i < 8; ++i)
+		{
+			SetCursorPositionString(0, 19 + i, Backgra[i], 14);
+		}
+		break;
+	default:
+		break;
 	}
 
-	if (dwKey & KEY_DOWN & iButton != 2)
+	if (iBackCheck >= 5)
 	{
-		iButton += 1;
+		iBack = 1;
 	}
+	if (iBackCheck >= 10)
+	{
+		iBack = 0;
+		iBackCheck = 0;
+	}
+	else
+	{
+		iBackCheck++;
+	} //* 여기까지 바닥
 }
