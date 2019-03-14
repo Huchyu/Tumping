@@ -23,3 +23,12 @@ typedef struct tagLogo
 	Vector3 Position;
 }Logo;
 
+typedef struct tagObject
+{
+	char* Name;
+	Vector3 Position;
+
+	int HP;
+	int Color;
+
+}Object;
