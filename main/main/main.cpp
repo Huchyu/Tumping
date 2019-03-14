@@ -164,12 +164,23 @@ void SceneManager()
 		break;
 	case SCENEID_RANK:
 		printf_s("점수게시판 아무튼 만들어야지 그치");
+
+		if (dwKey & KEY_ENTER)
+		{
+			SceneState = SCENEID_MENU;
+			Sleep(500);
+		}
 		break;
 	case SCENEID_STAGE:
 
 		SceneStage();
 		ScenePlay();
 
+		if (dwKey & KEY_ENTER)
+		{
+			SceneState = SCENEID_MENU;
+			Sleep(500);
+		}
 		break;
 	}
 }
